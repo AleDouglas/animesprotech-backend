@@ -1,4 +1,13 @@
+using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
+using AnimesProtech.Infrastructure;
+
+Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
