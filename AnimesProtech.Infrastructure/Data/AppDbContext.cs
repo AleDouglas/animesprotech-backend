@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using AnimesProtech.Web.Domain.Entities;
+using AnimesProtech.Domain.Entities;
 
 namespace AnimesProtech.Web.Infrastructure.Data
 {
