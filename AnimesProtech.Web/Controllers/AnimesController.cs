@@ -9,8 +9,7 @@ namespace AnimesProtech.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AnimesController : ControllerBase
-    {
+    public class AnimesController : ControllerBase{
         private readonly AppDbContext _context;
         private readonly LogService _logService;
 

@@ -8,15 +8,13 @@ namespace AnimesProtech.Infrastructure.Services
     {
         private readonly AppDbContext _context;
 
-        public LogService(AppDbContext context)
-        {
+        public LogService(AppDbContext context){
             _context = context;
         }
 
         public async Task LogAsync(string message, string level, string action)
         {
-            var log = new Log
-            {
+            var log = new Log{
                 Message = message,
                 Level = level,
                 Action = action,
