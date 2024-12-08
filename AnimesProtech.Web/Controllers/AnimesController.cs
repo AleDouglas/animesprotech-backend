@@ -11,9 +11,11 @@ namespace AnimesProtech.Web.Controllers
     public class AnimesController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly LogService _logService;
 
-        public AnimesController(AppDbContext context){
+        public AnimesController(AppDbContext context, LogService logService){
             _context = context;
+            _logService = logService;
         }
 
         // Método para retornar animes com paginação e filtros
