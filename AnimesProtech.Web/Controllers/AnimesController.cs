@@ -59,20 +59,14 @@ namespace AnimesProtech.Web.Controllers
             });
         }
 
-        // Método para retornar todos os animes sem paginação e filtros
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(){
-            return await _context.Animes.ToListAsync();
-        }
-
-        [HttpGet("all/active")]
+        [HttpGet("active")]
         public async Task<ActionResult<IEnumerable<Anime>>> GetActiveAnimes(){
             return await _context.Animes
                 .Where(a => !a.IsDeleted)
                 .ToListAsync();
         }
 
-        [HttpGet("all/desactive")]
+        [HttpGet("desactive")]
         public async Task<ActionResult<IEnumerable<Anime>>> GetDeletedAnimes(){
             return await _context.Animes
                 .Where(a => a.IsDeleted)
