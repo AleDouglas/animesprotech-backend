@@ -15,10 +15,64 @@ namespace AnimesProtech.Web.Controllers
             _context = context;
         }
 
-        // Método para retornar todos os animes
-        [HttpGet]
+        // Método para retornar todos os animes sem paginação e filtros
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(){
             return await _context.Animes.ToListAsync();
+        }
+
+        [HttpGet("all/active")]
+        public async Task<ActionResult<IEnumerable<Anime>>> GetActiveAnimes(){
+            return await _context.Animes
+                .Where(a => !a.IsDeleted)
+                .ToListAsync();
+        }
+
+        [HttpGet("all/desactive")]
+        public async Task<ActionResult<IEnumerable<Anime>>> GetDeletedAnimes(){
+            return await _context.Animes
+                .Where(a => a.IsDeleted)
+                .ToListAsync();
+        }
+
+        // Método para retornar animes com paginação e filtros
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(
+            [FromQuery] string? diretor,
+            [FromQuery] string? nome,
+            [FromQuery] string? resumo,
+            [FromQuery] int pageIndex = 0,  // Definindo valores padrão
+            [FromQuery] int pageSize = 10  // Definindo valores padrão
+        ){
+            var query = _context.Animes
+                .Where(a => !a.IsDeleted) // Apenas animes ativos
+                .AsQueryable();
+
+            // Filtros opcionais
+            if (!string.IsNullOrEmpty(diretor))
+                query = query.Where(a => a.Diretor.Contains(diretor));
+
+            if (!string.IsNullOrEmpty(nome))
+                query = query.Where(a => a.Nome.Contains(nome));
+
+            if (!string.IsNullOrEmpty(resumo))
+                query = query.Where(a => a.Resumo.Contains(resumo));
+
+            // Paginação
+            var totalRecords = await query.CountAsync();
+            var animes = await query
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Retorno com paginação
+            return Ok(new
+            {
+                TotalRecords = totalRecords,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Animes = animes
+            });
         }
 
         // Método para adicionar um anime
@@ -66,44 +120,6 @@ namespace AnimesProtech.Web.Controllers
             return NoContent();
         }
 
-        // Método para retornar animes com paginação e filtros
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(
-            [FromQuery] string? diretor,
-            [FromQuery] string? nome,
-            [FromQuery] string? resumo,
-            [FromQuery] int pageIndex = 0,  // Definindo valores padrão
-            [FromQuery] int pageSize = 10  // Definindo valores padrão
-        ){
-            var query = _context.Animes
-                .Where(a => !a.IsDeleted) // Apenas animes ativos
-                .AsQueryable();
 
-            // Filtros opcionais
-            if (!string.IsNullOrEmpty(diretor))
-                query = query.Where(a => a.Diretor.Contains(diretor));
-
-            if (!string.IsNullOrEmpty(nome))
-                query = query.Where(a => a.Nome.Contains(nome));
-
-            if (!string.IsNullOrEmpty(resumo))
-                query = query.Where(a => a.Resumo.Contains(resumo));
-
-            // Paginação
-            var totalRecords = await query.CountAsync();
-            var animes = await query
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            // Retorno com paginação
-            return Ok(new
-            {
-                TotalRecords = totalRecords,
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Animes = animes
-            });
-        }
     }
 }
