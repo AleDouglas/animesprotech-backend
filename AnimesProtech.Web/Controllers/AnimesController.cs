@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using AnimesProtech.Infrastructure.Data;
+using AnimesProtech.Infrastructure.Services;
 using AnimesProtech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,6 +87,14 @@ namespace AnimesProtech.Web.Controllers
 
             _context.Animes.Add(anime);
             await _context.SaveChangesAsync();
+
+            await _logService.LogAsync(
+                message: $"Anime '{anime.Nome}' #ID: {anime.Id} foi criado com sucesso.",
+                level: "Info",
+                action: "Create"
+            );
+
+
             return CreatedAtAction(nameof(GetAnimes), new { id = anime.Id }, anime);
         }
 
@@ -106,6 +115,12 @@ namespace AnimesProtech.Web.Controllers
             _context.Animes.Update(anime);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync(
+                message: $"Anime '{anime.Nome}' #ID: {anime.Id} foi atualizado com sucesso.",
+                level: "Info",
+                action: "Update"
+            );
+
             return NoContent();
         }
 
@@ -119,6 +134,12 @@ namespace AnimesProtech.Web.Controllers
             anime.IsDeleted = true;
             _context.Animes.Update(anime);
             await _context.SaveChangesAsync();
+
+            await _logService.LogAsync(
+                message: $"Anime '{anime.Nome}' #ID: {anime.Id} foi desativado com sucesso.",
+                level: "Info",
+                action: "Update"
+            );
 
             return NoContent();
         }
@@ -134,6 +155,12 @@ namespace AnimesProtech.Web.Controllers
             _context.Animes.Update(anime);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync(
+                message: $"Anime '{anime.Nome}' #ID: {anime.Id} foi reativado com sucesso.",
+                level: "Info",
+                action: "Update"
+            );
+
             return NoContent();
         }
 
@@ -146,6 +173,12 @@ namespace AnimesProtech.Web.Controllers
 
             _context.Animes.Remove(anime);
             await _context.SaveChangesAsync();
+
+            await _logService.LogAsync(
+                message: $"Anime '{anime.Nome}' #ID: {anime.Id} foi excluído com sucesso.",
+                level: "Info",
+                action: "Delete"
+            );
 
             return NoContent();
         }
