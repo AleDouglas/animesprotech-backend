@@ -26,10 +26,10 @@ namespace AnimesProtech.Web.Controllers
                 .SingleOrDefaultAsync(u => u.Username == model.Username);
 
             if (user == null || !VerifyPasswordHash(model.Password, user.PasswordHash))
-                return Unauthorized("Usuário ou senha inválidos.");
+                return Unauthorized(new { Message = "Credenciais inválidas." });
 
             if (!user.IsActive)
-                return Unauthorized("Usuário está desativado.");
+                return Unauthorized(new { Message = "Usuário inativo." });
 
             var secretKey = Env.GetString("SECRET_KEY") ?? throw new InvalidOperationException("SECRET_KEY não configurada no .env");
             var key = Encoding.ASCII.GetBytes(secretKey);
