@@ -31,10 +31,9 @@ namespace AnimesProtech.Web.Controllers
         )
         {
             var query = _context.Animes
-                .Where(a => !a.IsDeleted) // Apenas animes ativos
+                .Where(a => !a.IsDeleted) 
                 .AsQueryable();
 
-            // Filtros opcionais
             if (!string.IsNullOrEmpty(diretor))
                 query = query.Where(a => a.Diretor.Contains(diretor));
 
