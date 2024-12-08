@@ -52,8 +52,7 @@ namespace AnimesProtech.Web.Controllers
                 .ToListAsync();
 
             // Retorno com paginação
-            return Ok(new
-            {
+            return Ok(new{
                 TotalRecords = totalRecords,
                 PageIndex = pageIndex,
                 PageSize = pageSize,

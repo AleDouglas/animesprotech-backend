@@ -65,6 +65,12 @@ namespace AnimesProtech.Web.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync(
+                message: $"Usuário {user.Username} #{user.Id} criado.",
+                level: "Info",
+                action: "Create"
+            );
+
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
@@ -87,6 +93,12 @@ namespace AnimesProtech.Web.Controllers
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync(
+                message: $"Usuário {user.Username} #{user.Id} atualizado.",
+                level: "Info",
+                action: "Update"
+            );
+
             return NoContent();
         }
 
@@ -101,6 +113,12 @@ namespace AnimesProtech.Web.Controllers
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync(
+                message: $"Usuário {user.Username} #{user.Id} desativado.",
+                level: "Info",
+                action: "Disable"
+            );
+
             return NoContent();
         }
 
@@ -114,6 +132,12 @@ namespace AnimesProtech.Web.Controllers
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+
+            await _logService.LogAsync(
+                message: $"Usuário {user.Username} #{user.Id} excluído.",
+                level: "Info",
+                action: "Delete"
+            );
 
             return NoContent();
         }
