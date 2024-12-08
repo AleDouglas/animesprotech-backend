@@ -1,10 +1,11 @@
 using AnimesProtech.Domain.Entities;
 using AnimesProtech.Infrastructure.Data;
 using System.Threading.Tasks;
+using AnimesProtech.Infrastructure.Services;
 
 namespace AnimesProtech.Infrastructure.Services
 {
-    public class LogService
+    public class LogService : ILogService
     {
         private readonly AppDbContext _context;
 
@@ -25,4 +26,5 @@ namespace AnimesProtech.Infrastructure.Services
             await _context.SaveChangesAsync();
         }
     }
+    
 }

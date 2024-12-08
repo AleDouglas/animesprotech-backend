@@ -4,6 +4,7 @@ using AnimesProtech.Infrastructure.Data;
 using AnimesProtech.Infrastructure.Services;
 using AnimesProtech.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using AnimesProtech.Domain.Common;
 
 namespace AnimesProtech.Web.Controllers
 {
@@ -11,10 +12,11 @@ namespace AnimesProtech.Web.Controllers
     [Route("api/[controller]")]
     [Authorize]
     public class AnimesController : ControllerBase{
-        private readonly AppDbContext _context;
-        private readonly LogService _logService;
 
-        public AnimesController(AppDbContext context, LogService logService){
+        private readonly AppDbContext _context;
+        private readonly ILogService _logService;
+
+        public AnimesController(AppDbContext context, ILogService logService){
             _context = context;
             _logService = logService;
         }
@@ -50,29 +52,28 @@ namespace AnimesProtech.Web.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Retorno com paginação
-            return Ok(new{
+            var response = new PagedResponse<Anime>{
                 TotalRecords = totalRecords,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                Animes = animes
-            });
+                Items = animes
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("active")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Anime>>> GetActiveAnimes(){
-            return await _context.Animes
-                .Where(a => !a.IsDeleted)
-                .ToListAsync();
+            var activeAnimes = await _context.Animes.Where(a => !a.IsDeleted).ToListAsync();
+            return Ok(activeAnimes);
         }
 
         [HttpGet("desactive")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Anime>>> GetDeletedAnimes(){
-            return await _context.Animes
-                .Where(a => a.IsDeleted)
-                .ToListAsync();
+            var desactiveAnimes = await _context.Animes.Where(a => a.IsDeleted).ToListAsync();
+            return Ok(desactiveAnimes);
         }
 
         
