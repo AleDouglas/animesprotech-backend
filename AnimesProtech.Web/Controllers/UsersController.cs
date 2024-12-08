@@ -137,7 +137,6 @@ namespace AnimesProtech.Web.Controllers
             return NoContent();
         }
 
-        // Excluir um usuário permanentemente
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteUser(int id){
