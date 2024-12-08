@@ -24,11 +24,26 @@ namespace AnimesProtech.Web.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers(
+            [FromQuery] string? Username,
+            [FromQuery] string? FullName,
+            [FromQuery] string? Email,
             [FromQuery] int pageIndex = 0,
             [FromQuery] int pageSize = 10)
         {
-            var totalRecords = await _context.Users.CountAsync();
-            var users = await _context.Users
+
+            var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(Username))
+                query = query.Where(u => u.Username.Contains(Username));
+
+            if (!string.IsNullOrEmpty(FullName))
+                query = query.Where(u => u.FullName.Contains(FullName));
+            
+            if (!string.IsNullOrEmpty(Email))
+                query = query.Where(u => u.Email.Contains(Email));
+
+            var totalRecords = await query.CountAsync();
+            var users = await query
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
