@@ -1,6 +1,6 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using AnimesProtech.Infrastructure;
+using AnimesProtech.Infrastructure.Data;
 
 Env.Load();
 
