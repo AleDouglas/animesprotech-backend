@@ -9,6 +9,7 @@ namespace AnimesProtech.Infrastructure.Data
 
         public DbSet<Anime> Animes { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
