@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AnimesProtech.Infrastructure.Data;
 using AnimesProtech.Infrastructure.Services;
 using AnimesProtech.Domain.Entities;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnimesProtech.Web.Controllers
 {
     [ApiController]
-    [Route("api/animes/[controller]")]
+    [Route("api/[controller]")]
     public class AnimesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,6 +21,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para retornar animes com paginação e filtros
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(
             [FromQuery] string? diretor,
             [FromQuery] string? nome,
@@ -60,6 +62,7 @@ namespace AnimesProtech.Web.Controllers
         }
 
         [HttpGet("active")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Anime>>> GetActiveAnimes(){
             return await _context.Animes
                 .Where(a => !a.IsDeleted)
@@ -67,6 +70,7 @@ namespace AnimesProtech.Web.Controllers
         }
 
         [HttpGet("desactive")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Anime>>> GetDeletedAnimes(){
             return await _context.Animes
                 .Where(a => a.IsDeleted)
@@ -77,9 +81,14 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para adicionar um anime
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Anime>> AddAnime(Anime anime){
             if (anime == null)
                 return BadRequest("Anime não pode ser nulo.");
+            if (string.IsNullOrWhiteSpace(anime.Nome))
+                return BadRequest("O nome do anime é obrigatório.");
+            if (string.IsNullOrWhiteSpace(anime.Diretor))
+                return BadRequest("O diretor do anime é obrigatório.");
 
             _context.Animes.Add(anime);
             await _context.SaveChangesAsync();
@@ -96,6 +105,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para editar um anime
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> EditAnime(int id, Anime updatedAnime){
             if (id != updatedAnime.Id)
                 return BadRequest("ID do anime não corresponde ao parâmetro.");
@@ -103,6 +113,10 @@ namespace AnimesProtech.Web.Controllers
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
                 return NotFound();
+            if (string.IsNullOrWhiteSpace(updatedAnime.Nome))
+                return BadRequest("O nome do anime é obrigatório.");
+            if (string.IsNullOrWhiteSpace(updatedAnime.Diretor))
+                return BadRequest("O diretor do anime é obrigatório.");
 
             anime.Nome = updatedAnime.Nome;
             anime.Resumo = updatedAnime.Resumo;
@@ -122,6 +136,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para desativar um anime
         [HttpPut("{id}/disable")]
+        [Authorize]
         public async Task<IActionResult> DisableAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
@@ -142,6 +157,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para reativar um anime
         [HttpPut("{id}/enable")]
+        [Authorize]
         public async Task<IActionResult> EnableAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
@@ -162,6 +178,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para deletar ( Excluir ) um anime
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
