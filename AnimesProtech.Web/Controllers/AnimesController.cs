@@ -17,7 +17,14 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para retornar animes com paginação e filtros
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes([FromQuery] string? diretor,[FromQuery] string? nome,[FromQuery] string? resumo,[FromQuery] int pageIndex = 0,  // Definindo valores padrão[FromQuery] int pageSize = 10  // Definindo valores padrão){
+        public async Task<ActionResult<IEnumerable<Anime>>> GetAnimes(
+            [FromQuery] string? diretor,
+            [FromQuery] string? nome,
+            [FromQuery] string? resumo,
+            [FromQuery] int pageIndex = 0,  // Definindo valores padrão
+            [FromQuery] int pageSize = 10  // Definindo valores padrão
+        )
+        {
             var query = _context.Animes
                 .Where(a => !a.IsDeleted) // Apenas animes ativos
                 .AsQueryable();

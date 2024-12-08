@@ -15,7 +15,6 @@ namespace AnimesProtech.Web.Controllers
             _context = context;
         }
 
-        // Método para retornar todos os animes sem paginação e filtros
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Log>>> GetLogs(){
             return await _context.Logs.ToListAsync();
