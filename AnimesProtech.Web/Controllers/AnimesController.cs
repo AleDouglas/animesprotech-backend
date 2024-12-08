@@ -21,15 +21,6 @@ namespace AnimesProtech.Web.Controllers
             return await _context.Animes.ToListAsync();
         }
 
-        // Método para retornar um anime específico
-        [HttpPost]
-        public async Task<ActionResult<Anime>> AddAnime(Anime anime){
-            _context.Animes.Add(anime);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAnimes), new { id = anime.Id }, anime);
-        }
-
-
         // Método para adicionar um anime
         [HttpPost]
         public async Task<ActionResult<Anime>> AddAnime(Anime anime){
