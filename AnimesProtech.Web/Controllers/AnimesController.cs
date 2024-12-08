@@ -9,6 +9,7 @@ namespace AnimesProtech.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AnimesController : ControllerBase{
         private readonly AppDbContext _context;
         private readonly LogService _logService;
@@ -80,7 +81,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para adicionar um anime
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Anime>> AddAnime(Anime anime){
             if (anime == null)
                 return BadRequest("Anime não pode ser nulo.");
@@ -104,7 +105,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para editar um anime
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditAnime(int id, Anime updatedAnime){
             if (id != updatedAnime.Id)
                 return BadRequest("ID do anime não corresponde ao parâmetro.");
@@ -135,7 +136,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para desativar um anime
         [HttpPut("{id}/disable")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DisableAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
@@ -156,7 +157,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para reativar um anime
         [HttpPut("{id}/enable")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EnableAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
@@ -177,7 +178,7 @@ namespace AnimesProtech.Web.Controllers
 
         // Método para deletar ( Excluir ) um anime
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAnime(int id){
             var anime = await _context.Animes.FindAsync(id);
             if (anime == null)
