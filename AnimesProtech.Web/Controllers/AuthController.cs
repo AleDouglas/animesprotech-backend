@@ -16,12 +16,12 @@ namespace AnimesProtech.Web.Controllers
             if (model.Username != "admin" || model.Password != "password")
                 return Unauthorized("Usuário ou senha inválidos.");
 
+            var secretKey = Env.GetString("SECRET_KEY") ?? throw new InvalidOperationException("SECRET_KEY não configurada no .env");
+            var key = Encoding.ASCII.GetBytes(secretKey);
+
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("YourSecretKeyHere");
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
+            var tokenDescriptor = new SecurityTokenDescriptor{
+                Subject = new ClaimsIdentity(new[]{
                     new Claim(ClaimTypes.Name, model.Username),
                     new Claim(ClaimTypes.Role, "Admin")
                 }),
