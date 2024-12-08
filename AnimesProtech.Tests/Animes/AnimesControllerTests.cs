@@ -155,6 +155,47 @@ namespace AnimesProtech.Tests.Controllers
             Assert.Equal(newAnime.Diretor, response.Diretor);
             Assert.Equal(newAnime.Resumo, response.Resumo);
         }
+
+        [Fact]
+        public async Task UpdateAnime_ReturnsNoContentResult(){
+            var token = await AuthenticateAsAdmin();
+
+            _controller.ControllerContext = new ControllerContext{
+                HttpContext = new DefaultHttpContext{
+                    Request = {
+                        Headers = { ["Authorization"] = $"Bearer {token}" }
+                    }
+                }
+            };
+
+            var updatedAnime = new Anime{
+                Id = 1,
+                Nome = "Naruto Shippuden",
+                Diretor = "Hayato Date",
+                Resumo = "A continuação da história de Naruto."
+            };
+
+            var result = await _controller.EditAnime(updatedAnime.Id, updatedAnime);
+
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task DeleteAnime_ReturnsNoContentResult(){
+            var token = await AuthenticateAsAdmin();
+
+            _controller.ControllerContext = new ControllerContext{
+                HttpContext = new DefaultHttpContext{
+                    Request = {
+                        Headers = { ["Authorization"] = $"Bearer {token}" }
+                    }
+                }
+            };
+
+            var result = await _controller.DeleteAnime(1);
+
+            Assert.IsType<NoContentResult>(result);
+        }
        
     }
 }
