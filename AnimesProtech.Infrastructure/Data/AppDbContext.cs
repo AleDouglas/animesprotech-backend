@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using AnimesProtech.Domain.Entities;
 
-namespace AnimesProtech.Web.Infrastructure.Data
+namespace AnimesProtech.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
