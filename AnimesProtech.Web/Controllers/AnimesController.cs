@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AnimesProtech.Web.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/animes/[controller]")]
     public class AnimesController : ControllerBase
     {
         private readonly AppDbContext _context;
